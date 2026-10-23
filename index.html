@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De la commande à la livraison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap">
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Fiche d'exercices en thème clair : blocs = séances, cartes dépliables, corrections masquables */
+:root {
+  --bg:        #f4f6f9;
+  --surface:   #ffffff;
+  --card:      #ffffff;
+  --border:    #dfe3ea;
+  --border-hi: #b9c0ce;
+  --text:      #1d2230;
+  --text-dim:  #5c6476;
+  --accent:    #b97d00;
+  --accent-bg: #fff6df;
+  --green:     #1b8047;
+  --green-bg:  #ecf7f0;
+  --green-bd:  #c9e6d4;
+  --green-dk:  #12552f;
+  --red:       #c23b3b;
+  --blue:      #2d69ad;
+  --blue-bg:   #edf3fb;
+  --purple:    #6f45ad;
+  --font-head: 'Syne', 'Trebuchet MS', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius:    10px;
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.site-header {
+  background: linear-gradient(135deg, #ffffff 0%, #eef2f8 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 44px 20px 32px;
+  text-align: center;
+}
+.site-header .kicker {
+  display: inline-block;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 3px;
+  margin-bottom: 18px;
+}
+.site-header h1 {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 6vw, 38px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.site-header .sub {
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 400;
+  max-width: 540px;
+  margin: 0 auto 20px;
+}
+.legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto 22px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+/* ── NAV ANCRES ──────────────────────────────────────────── */
+.nav-anchors {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.nav-anchors a {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  text-decoration: none;
+  transition: border-color .15s, color .15s;
+}
+.nav-anchors a:hover, .nav-anchors a:focus-visible { border-color: var(--accent); color: var(--accent); }
+
+/* ── CONTENEUR PRINCIPAL ─────────────────────────────────── */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 36px 18px 80px;
+}
+
+/* ── TITRE DE BLOC ───────────────────────────────────────── */
+.bloc-titre {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 52px 0 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.bloc-titre:first-child { margin-top: 0; }
+.bloc-titre .icone { font-size: 26px; flex-shrink: 0; }
+.bloc-titre h2 {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.bloc-titre h2 small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* ── MÉMO ────────────────────────────────────────────────── */
+.memo {
+  background: var(--green-bg);
+  border: 1px solid var(--green-bd);
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 16px 0 24px;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.memo .memo-titre {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.memo code {
+  display: block;
+  background: #ffffff;
+  border: 1px solid var(--green-bd);
+  border-radius: 5px;
+  padding: 8px 12px;
+  color: var(--green-dk);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13.5px;
+  margin: 5px 0;
+}
+.memo .note { color: var(--text-dim); font-size: 13px; margin-top: 8px; }
+
+/* ── CARTE EXERCICE ──────────────────────────────────────── */
+.exo-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.exo-card:hover { border-color: var(--border-hi); }
+
+.exo-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.exo-header::-webkit-details-marker { display: none; }
+.exo-header:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.exo-num {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  min-width: 40px;
+}
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.badge-1 { background: #e9f6ee; color: var(--green); border: 1px solid #bfe2cc; }
+.badge-2 { background: var(--accent-bg); color: #8a5d00; border: 1px solid #efd798; }
+.badge-3 { background: #fbeaea; color: var(--red); border: 1px solid #efc4c4; }
+.badge-exam { background: #f2ecfa; color: var(--purple); border: 1px solid #d9c9ef; }
+
+.exo-titre-txt {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.chevron { color: var(--text-dim); font-size: 13px; flex-shrink: 0; transition: transform .2s; }
+details[open] .chevron { transform: rotate(180deg); }
+
+/* ── CORPS DE L'EXERCICE ─────────────────────────────────── */
+.exo-body { padding: 0 16px 20px; border-top: 1px solid var(--border); }
+
+.contexte {
+  background: var(--blue-bg);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.contexte strong { color: var(--text); }
+
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+.tableau-donnees {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: var(--surface);
+}
+.tableau-donnees th {
+  background: #eef1f6;
+  color: var(--text-dim);
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.tableau-donnees td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+}
+.tableau-donnees tr:last-child td { border-bottom: none; }
+.tableau-donnees td.num { font-weight: 700; color: var(--text); white-space: nowrap; }
+
+.questions { margin: 18px 0 0; }
+.question { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+.question .q-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 11px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.question p { font-size: 14px; margin: 0; min-width: 0; }
+
+/* ── COUP DE POUCE ───────────────────────────────────────── */
+.ordre-grandeur {
+  background: var(--accent-bg);
+  border: 1px solid #efd798;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #6e4b00;
+  margin: 12px 0 0;
+}
+.ordre-grandeur::before { content: "💡 "; }
+
+/* ── BOUTON CORRECTION ───────────────────────────────────── */
+.btn-corrige {
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 16px;
+  margin-top: 18px;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-corrige:hover, .btn-corrige:focus-visible { border-color: var(--green); color: var(--green); }
+
+/* ── CORRECTION ──────────────────────────────────────────── */
+.correction {
+  display: none;
+  background: var(--green-bg);
+  border: 1px solid var(--green-bd);
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.correction.visible { display: block; }
+.correction .corr-etape {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--green-bd);
+}
+.correction .corr-etape:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.correction .c-num {
+  display: inline-block;
+  background: var(--green);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 6px;
+}
+.correction code {
+  display: block;
+  background: #ffffff;
+  border: 1px solid var(--green-bd);
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: var(--green-dk);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  margin: 5px 0;
+}
+.correction .res { font-family: var(--font-head); font-weight: 700; color: var(--text); }
+.correction .conclu { margin-top: 8px; font-size: 13.5px; color: #2c6244; font-style: italic; }
+.correction .tableau-corr { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; background: #ffffff; }
+.correction .tableau-corr th {
+  background: #dff0e6;
+  color: var(--green-dk);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  text-align: left;
+}
+.correction .tableau-corr td { padding: 6px 10px; border-bottom: 1px solid var(--green-bd); color: #24402f; vertical-align: top; }
+.correction .tableau-corr td.val { font-weight: 700; color: var(--green); }
+
+/* ── SÉPARATEUR ──────────────────────────────────────────── */
+hr.section-sep { border: none; border-top: 1px solid var(--border); margin: 54px 0 0; }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+  background: var(--surface);
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .exo-titre-txt { font-size: 13.5px; }
+  .contexte { font-size: 13.5px; }
+  .tableau-donnees { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="kicker">🥖 Gestion appliquée – CAP boulanger</div>
+  <h1>De la commande<br>à la livraison</h1>
+  <p class="sub">Chapitre 9. 18 exercices en 5 séances, avec la boulangerie-pâtisserie Au pain doré. Ouvre un exercice, réponds sur ton cahier, puis vérifie avec la correction.</p>
+  <div class="legende">
+    <span class="badge badge-1">⬆ décollage</span> je découvre
+    <span class="badge badge-2">◆ intermédiaire</span> j'applique
+    <span class="badge badge-exam">★ examen</span> je m'entraîne
+  </div>
+  <nav class="nav-anchors">
+    <a href="#role">1 · Le rôle de la commande</a>
+    <a href="#passer">2 · Passer une commande</a>
+    <a href="#bon-commande">3 · Le bon de commande</a>
+    <a href="#livraison">4 · Le bon de livraison</a>
+    <a href="#examen">5 · Sujets type examen</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 1 – LE RÔLE DE LA COMMANDE (séance 1)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="role">
+  <span class="icone">🤝</span>
+  <h2><small>Séance 1 · 1 h</small>Bloc 1 – La commande, un contrat</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Commande = contrat de vente conclu entre un client et un fournisseur.</code>
+  <code>Le client s'engage à : régler la somme convenue.</code>
+  <code>Le fournisseur s'engage à : livrer les produits commandés · respecter les délais de livraison convenus · respecter les règles d'hygiène et de sécurité.</code>
+  <p class="note">Encadré « bon à savoir » et partie 1 du manuel. Les personnages de la page : Karim, le patron boulanger · Léa, l'apprentie · Sophie, la responsable de la boutique.</p>
+</div>
+
+<!-- EX 1 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 1</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Qui doit faire quoi ?</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Karim, patron de la boulangerie-pâtisserie <strong>Au pain doré</strong>, commande des sacs de farine à son meunier, les <strong>Moulins de la Plaine</strong>. Léa, son apprentie, se demande qui doit faire quoi. (Exercice 1 du manuel.)<br><br>
+      <strong>a.</strong> Respecter les délais de livraison convenus<br>
+      <strong>b.</strong> Régler la somme convenue<br>
+      <strong>c.</strong> Respecter les règles d'hygiène et de sécurité<br>
+      <strong>d.</strong> Livrer les produits commandés
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Qui est le client ? Qui est le fournisseur ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Pour chaque obligation (a à d), écris : client ou fournisseur.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> le client achète, le fournisseur vend. Une seule obligation concerne le client.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Client : Au pain doré (Karim) · fournisseur : Moulins de la Plaine</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span> Corrigé du manuel :
+        <code>a. fournisseur · b. client · c. fournisseur · d. fournisseur</code>
+        <p class="conclu">Le client paie. Le fournisseur livre les bons produits, à temps, dans le respect de l'hygiène et de la sécurité.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 2 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 2</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Au pain doré : client ou fournisseur ?</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Voici trois situations vécues par la boulangerie <strong>Au pain doré</strong> :<br><br>
+      <strong>1.</strong> Karim commande des citrons et des pommes au grossiste <strong>Centre Primeurs</strong> pour ses chaussons aux pommes.<br>
+      <strong>2.</strong> Le restaurant <strong>Le Bistrot du Marché</strong> commande chaque jour des baguettes à Au pain doré.<br>
+      <strong>3.</strong> Karim commande des sacs de farine aux Moulins de la Plaine.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Dans chaque situation, Au pain doré est-il client ou fournisseur ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Dans la situation 2, cite l'obligation du Bistrot du Marché.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> demande-toi qui achète et qui vend. La même entreprise peut être client un jour, fournisseur le lendemain.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>1. client · 2. fournisseur · 3. client</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p class="res">Le Bistrot du Marché est client : il doit régler la somme convenue.</p>
+        <p class="conclu">Quand Au pain doré vend au restaurant, c'est la boulangerie qui doit livrer à temps, les bons produits, en respectant l'hygiène.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 3 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 3</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Qui n'a pas respecté le contrat ?</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Un mois à Au pain doré :<br><br>
+      <strong>a.</strong> La farine commandée pour lundi arrive mercredi.<br>
+      <strong>b.</strong> Le Bistrot du Marché n'a pas payé ses baguettes du mois.<br>
+      <strong>c.</strong> Le livreur pose les sacs de farine directement sur le sol mouillé du trottoir.<br>
+      <strong>d.</strong> Karim a commandé 10 sacs de farine, il en reçoit 7.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Pour chaque cas, indique qui n'a pas respecté le contrat : le client ou le fournisseur.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Pour chaque cas, nomme l'obligation non respectée.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> reprends les 4 obligations de l'exercice 1 et cherche celle qui correspond à chaque cas.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <div class="table-wrap">
+        <table class="tableau-corr">
+          <tr><th>Cas</th><th>Qui ?</th><th>Obligation non respectée</th></tr>
+          <tr><td class="val">a</td><td>Fournisseur (Moulins de la Plaine)</td><td>Respecter les délais de livraison convenus</td></tr>
+          <tr><td class="val">b</td><td>Client (Bistrot du Marché)</td><td>Régler la somme convenue</td></tr>
+          <tr><td class="val">c</td><td>Fournisseur</td><td>Respecter les règles d'hygiène et de sécurité</td></tr>
+          <tr><td class="val">d</td><td>Fournisseur</td><td>Livrer les produits commandés</td></tr>
+        </table>
+        </div>
+        <p class="conclu">La commande est un contrat : chacun doit respecter ses engagements.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 4 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 4</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Question flash : la commande</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Léa prépare son évaluation. Karim lui pose trois questions pendant la pause.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Définis la commande.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Cite une obligation du client.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Cite deux obligations du fournisseur.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> relis le mémo du bloc 1. Réponds par une phrase complète.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <p class="res">La commande est un contrat de vente conclu entre un client et un fournisseur.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Régler la somme convenue.</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span> Deux réponses parmi :
+        <code>Livrer les produits commandés · respecter les délais de livraison convenus · respecter les règles d'hygiène et de sécurité</code>
+      </div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 2 – PASSER UNE COMMANDE (séance 2)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="passer" style="margin-top:40px">
+  <span class="icone">📞</span>
+  <h2><small>Séance 2 · 1 h</small>Bloc 2 – Passer une commande</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Commande par téléphone (oral) : simple et rapide, mais pas de preuve en cas de litige.</code>
+  <code>Commande par écrit : moins rapide, mais c'est une preuve écrite recevable devant les tribunaux.</code>
+  <code>Documents pour commander par écrit : bon de commande (BC), bulletin de commande, courriel de confirmation.</code>
+  <p class="note">Document 1 et exercice 2 du manuel. Bon réflexe : une commande passée par téléphone se confirme par écrit.</p>
+</div>
+
+<!-- EX 5 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 5</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Téléphone ou écrit : le tableau</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le document 1 du manuel explique qu'un boulanger commande souvent par téléphone pour gagner du temps. Mais, en cas de désaccord, il est difficile de prouver ce qui a été dit. Devant les tribunaux, la preuve repose surtout sur un écrit. (Exercice 2 du manuel.)
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Moyen de communication</th><th>Avantages</th><th>Inconvénients</th></tr>
+        <tr><td>Commande par téléphone (oral)</td><td>?</td><td>?</td></tr>
+        <tr><td>Commande par écrit</td><td>?</td><td>?</td></tr>
+      </table>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Recopie et complète le tableau.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> pense au temps gagné et à ce qui se passe si le fournisseur dit « vous n'avez jamais commandé ça ».</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span> Corrigé du manuel :
+        <div class="table-wrap">
+        <table class="tableau-corr">
+          <tr><th>Moyen</th><th>Avantages</th><th>Inconvénients</th></tr>
+          <tr><td class="val">Téléphone</td><td>Simple, rapide</td><td>Pas de preuve en cas de litige</td></tr>
+          <tr><td class="val">Écrit</td><td>Preuve écrite recevable devant les tribunaux (bon de commande, bulletin de commande ou confirmation par courriel)</td><td>Moins rapide</td></tr>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 6 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 6</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Le litige des sacs de farine</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Lundi, Karim appelle les Moulins de la Plaine et commande <strong>8 sacs</strong> de farine de tradition française T65. Il ne confirme pas par écrit. Mercredi, le livreur apporte <strong>5 sacs</strong>. Le meunier affirme : « au téléphone, vous avez dit 5 sacs ».
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Karim peut-il prouver qu'il a commandé 8 sacs ? Justifie.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Qu'aurait dû faire Karim après son appel ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>Cite deux documents qui auraient servi de preuve.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> relis le mémo : quel est l'inconvénient du téléphone ?</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <p class="res">Non. La commande a été passée par téléphone : il n'existe aucune preuve écrite de la quantité commandée.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Confirmer sa commande par écrit, par exemple par courriel.</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Bon de commande · bulletin de commande · courriel de confirmation (deux au choix)</code>
+        <p class="conclu">C'est le conseil du document 1 : confirmer par écrit toute commande téléphonique.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 7 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 7</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Rédiger un courriel de confirmation</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Karim a retenu la leçon. Il vient d'appeler les Moulins de la Plaine et demande à Léa de confirmer la commande par courriel.<br><br>
+      <strong>Éléments de la commande :</strong> 8 sacs de 25 kg de farine de tradition française T65 · 2 sacs de 25 kg de farine de seigle T130 · livraison le mercredi 4 novembre 2026.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Rédige l'objet du courriel.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Rédige le message en 4 à 6 lignes : formule de politesse, rappel de l'appel, produits et quantités, date de livraison, signature.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> un courriel professionnel commence par « Bonjour » ou « Madame, Monsieur » et se termine par une formule de politesse et le nom de l'entreprise.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Objet : confirmation de commande – Au pain doré</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span> Exemple de message :
+        <code>Bonjour,<br>suite à notre appel de ce jour, je vous confirme notre commande : 8 sacs de 25 kg de farine de tradition française T65 et 2 sacs de 25 kg de farine de seigle T130, livrables le mercredi 4 novembre 2026.<br>Merci de nous confirmer la bonne réception de ce message.<br>Cordialement,<br>Léa, pour Karim – boulangerie-pâtisserie Au pain doré</code>
+        <p class="conclu">Ce courriel est une preuve écrite de la commande. Karim le garde.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 8 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 8</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Question flash : commander</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Sophie, la responsable de la boutique, hésite : « je téléphone ou j'écris au fournisseur ? ».
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Cite un avantage et un inconvénient de la commande par téléphone.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Explique pourquoi la commande écrite protège la boulangerie.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Conseille Sophie en une phrase.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> pour la question 3, combine les deux moyens.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Avantage : simple, rapide · inconvénient : pas de preuve en cas de litige</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p class="res">L'écrit est une preuve recevable devant les tribunaux : il prouve la date et le contenu de la commande.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Elle peut téléphoner pour gagner du temps, puis confirmer la commande par écrit (courriel ou bon de commande).</code>
+      </div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 3 – LES MENTIONS DU BON DE COMMANDE (séance 3)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="bon-commande" style="margin-top:40px">
+  <span class="icone">📝</span>
+  <h2><small>Séance 3 · 1 h</small>Bloc 3 – Les mentions du bon de commande</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Le bon de commande est établi par le client. Il envoie l'original au fournisseur et garde un double.</code>
+  <code>Mentions obligatoires : identification du fournisseur · identification du client · date du bon de commande · numéro du bon de commande · conditions de vente (règlement, livraison, transport) · caractéristiques des produits (désignation, prix unitaire HT, unité de vente, quantité) · signature du client.</code>
+  <code>Franco de port = les frais de livraison ne sont pas facturés.</code>
+  <p class="note">Document 2 et exercices 3 à 8 du manuel. HT = hors taxes.</p>
+</div>
+
+<!-- EX 9 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 9</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Original et double du bon de commande</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Karim remplit un bon de commande pour Centre Primeurs. Léa demande : « pourquoi tu en gardes une copie ? ». (Document 2 et exercice 3 du manuel.)
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Qui établit le bon de commande : le client ou le fournisseur ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Qui reçoit l'original ? Qui garde le double ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>Pourquoi le client doit-il conserver un double du bon de commande ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> à quoi sert le double le jour de la livraison ? et en cas de désaccord ?</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Le client (Au pain doré).</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Original : le fournisseur (Centre Primeurs) · double : le client (Au pain doré)</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span> Corrigé du manuel :
+        <p class="res">Le double permet de vérifier la livraison et de prouver la date et le contenu de la commande en cas de litige.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 10 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 10</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Repérer les mentions du bon de commande n° 2024/10</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Voici le bon de commande de l'exercice 4 du manuel, envoyé par Au pain doré à Centre Primeurs pour fabriquer des chaussons aux pommes.<br><br>
+      <strong>Boulangerie-pâtisserie Au pain doré</strong> – RCS Paris B 305 225 369 – n° TVA FR28847201859 – 35 bis avenue de la Plaine, 75000 Paris – tél. 01 34 69 XX XX<br>
+      <strong>Bon de commande n° 2024/10</strong><br>
+      <strong>Fournisseur :</strong> Centre Primeurs – MIN, box 524 – 1 rue de la Tour – 92150 Rungis
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Date</th><th>Livraison</th><th>Transport</th><th>Règlement</th><th>Réduction</th></tr>
+        <tr><td>10/02/2024</td><td>Sous 24 heures</td><td>25 € – franco pour toute commande supérieure à 300 €</td><td>Paiement sous 8 jours</td><td>Remise 5 % sur l'ensemble de la commande</td></tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Réf.</th><th>Désignation</th><th>Unité</th><th>Qté</th><th>PU HT</th></tr>
+        <tr><td>CITJAU01</td><td>Citron jaune cat. 1 Argentine cal. 4/40</td><td>kg</td><td class="num">3</td><td class="num">2,65 €</td></tr>
+        <tr><td>ORAJUS0</td><td>Orange à jus cat. 1 Portugal cal. 5/6</td><td>kg</td><td class="num">5</td><td class="num">2,20 €</td></tr>
+        <tr><td>POMGOL2</td><td>Pomme golden cat. 1 cal. 70/75</td><td>carton de 5 kg</td><td class="num">2</td><td class="num">8,50 €</td></tr>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--text-dim)">Signature : (signée par Karim)</p>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Retrouve sur ce bon les 7 mentions obligatoires du mémo. Pour chacune, recopie l'information correspondante.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> le client est en haut à gauche, le fournisseur dans le cadre à droite. Le premier tableau donne les conditions de vente.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span> Corrigé du manuel :
+        <div class="table-wrap">
+        <table class="tableau-corr">
+          <tr><th>Mention</th><th>Sur le bon</th></tr>
+          <tr><td class="val">Identification du client</td><td>Au pain doré, RCS, n° TVA, adresse, téléphone</td></tr>
+          <tr><td class="val">Identification du fournisseur</td><td>Centre Primeurs, Rungis</td></tr>
+          <tr><td class="val">Date</td><td>10/02/2024</td></tr>
+          <tr><td class="val">Numéro</td><td>2024/10</td></tr>
+          <tr><td class="val">Conditions de vente</td><td>Livraison sous 24 h · transport 25 €, franco au-delà de 300 € · paiement sous 8 jours · remise 5 %</td></tr>
+          <tr><td class="val">Caractéristiques des produits</td><td>Réf., désignation, unité, quantité, prix unitaire HT</td></tr>
+          <tr><td class="val">Signature du client</td><td>En bas du bon</td></tr>
+        </table>
+        </div>
+        <p class="conclu">Remarques sur le document du manuel : « 75000 Paris » n'est pas un code postal réel (Paris va de 75001 à 75020), et Rungis a pour code postal 94150, pas 92150. Ces erreurs ne changent pas les réponses. Le manuel prend des fruits : en boulangerie, ils servent pour la viennoiserie (chaussons aux pommes). Les exercices 12, 15 et 18 transposent le bon de commande aux matières premières de panification (farines).</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 11 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 11</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Lire le bon de commande n° 2024/10</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Léa range le double du bon de commande n° 2024/10 (exercice 10). Karim lui pose quatre questions. (Exercices 5 à 8 du manuel.)
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>À quelle date la commande sera-t-elle livrée ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Combien de kilos de pommes golden sont commandés ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>À quoi correspond le prix unitaire HT de 2,20 € ?</p></div>
+      <div class="question"><span class="q-num">4</span><p>« Franco de port » signifie que les frais de livraison ne sont pas facturés. Explique la phrase : « franco pour toute commande supérieure à 300 € ».</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> pour les pommes, regarde la colonne « unité » : 1 unité = 1 carton de 5 kg.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span> Corrigé du manuel :
+        <code>Le 11/02/2024 (sous 24 heures après le 10/02/2024).</code>
+        <p class="conclu">Remarque : le 11/02/2024 est un dimanche. Dans la réalité, il faut vérifier que le fournisseur livre ce jour-là.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>2 cartons × 5 kg = 10 kg de pommes golden</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>C'est le prix d'un kilo (l'unité de vente) d'oranges à jus.</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p class="res">Pour une commande de plus de 300 €, la livraison est gratuite. En dessous, elle coûte 25 €.</p>
+        <p class="conclu">Le bon ne précise pas si les 300 € sont HT ou TTC : dans la réalité, il faut le demander au fournisseur.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 12 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 12</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Le bon de commande incomplet de Léa</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Léa a préparé ce bon de commande pour les Moulins de la Plaine. Karim le relit avant de l'envoyer. (Transposition de l'exercice 4 du manuel, prix fictifs.)<br><br>
+      <strong>Boulangerie-pâtisserie Au pain doré</strong> – 35 bis avenue de la Plaine – Paris<br>
+      <strong>Bon de commande</strong><br>
+      <strong>Fournisseur :</strong> Moulins de la Plaine – zone artisanale des Blés – 77000 Melun<br>
+      <strong>Conditions :</strong> livraison sous 48 heures · paiement à 30 jours
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Réf.</th><th>Désignation</th><th>Unité</th><th>Qté</th><th>PU HT</th></tr>
+        <tr><td>FTRAD65</td><td>Farine de tradition française T65</td><td>sac de 25 kg</td><td class="num">8</td><td class="num">21,00 €</td></tr>
+        <tr><td>FSEIG130</td><td>Farine de seigle T130</td><td>sac de 25 kg</td><td class="num">2</td><td class="num">24,00 €</td></tr>
+      </table>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Trois mentions obligatoires manquent. Lesquelles ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Combien de kilos de farine de tradition sont commandés ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>Que risque Karim s'il envoie ce bon sans signature ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> compare ce bon avec la liste des 7 mentions du mémo, une par une.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Le numéro du bon de commande · la date du bon de commande · la signature du client</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>8 sacs × 25 kg = 200 kg de farine de tradition française T65</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Sans signature du client, le bon ne prouve pas que la boulangerie s'est engagée : il perd sa valeur de preuve en cas de litige.</p>
+        <p class="conclu">Avant d'envoyer un bon de commande, on vérifie les 7 mentions.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 4 – LE BON DE LIVRAISON (séance 4)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="livraison" style="margin-top:40px">
+  <span class="icone">🚚</span>
+  <h2><small>Séance 4 · 1 h</small>Bloc 4 – Le bon de livraison et le contrôle</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Le bon de livraison (BL) est émis par le fournisseur. Il prouve que les marchandises ont été livrées et réceptionnées par le client.</code>
+  <code>Il est établi en 2 exemplaires : le bon de livraison, gardé par le fournisseur · le bon de réception, gardé par le client.</code>
+  <code>Mentions obligatoires : identification du fournisseur · identification du client · numéro du BL · date de livraison · caractéristiques des produits livrés · signature du client.</code>
+  <code>À la réception, je vérifie : le bon état des cartons et emballages · la qualité des produits · la quantité. Je rapproche (= je compare) le bon de commande et le bon de livraison.</code>
+  <code>En cas de problème : j'écris des réserves manuscrites sur le BL, je date, je signe.</code>
+  <p class="note">Partie 4 et exercices 9 à 11 du manuel. Le BL signé déclenche la facturation : une erreur non signalée sera facturée.</p>
+</div>
+
+<!-- EX 13 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 13</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Les mentions du bon de livraison n° 6589</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le 11/02/2024, Centre Primeurs livre Au pain doré. Le livreur tend ce bon de livraison à Léa. (Exercice 9 du manuel.)<br><br>
+      <strong>Centre Primeurs</strong> – RCS Paris B 428 355 658 – n° TVA FR28572480195 – MIN, box 524 – 92150 Rungis<br>
+      <strong>Bon de livraison n° 6589</strong> – date de livraison : 11/02/2024<br>
+      <strong>Client :</strong> boulangerie-pâtisserie Au pain doré – 35 bis avenue de la Plaine – 75000 Paris
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Réf.</th><th>Désignation</th><th>Unité</th><th>Qté</th><th>PU HT</th></tr>
+        <tr><td>CITJAU01</td><td>Citron jaune cat. 1 Argentine cal. 4/40</td><td>kg</td><td class="num">3</td><td class="num">2,65 €</td></tr>
+        <tr><td>ORAJUS0</td><td>Orange à jus cat. 1 Portugal cal. 5/6</td><td>kg</td><td class="num">5</td><td class="num">2,20 €</td></tr>
+        <tr><td>POMGOL2</td><td>Pomme golden cat. 1 cal. 70/75</td><td>carton de 5 kg</td><td class="num">1</td><td class="num">8,50 €</td></tr>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--text-dim)">Réserves : … &nbsp;|&nbsp; Date : … &nbsp;|&nbsp; Signature : …</p>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Qui a établi ce document ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Retrouve les 6 mentions obligatoires du bon de livraison.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Quelle mention manque encore ? Qui doit la compléter ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> cette fois, le fournisseur est en haut à gauche et le client dans le cadre.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Le fournisseur : Centre Primeurs.</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span> Corrigé du manuel :
+        <div class="table-wrap">
+        <table class="tableau-corr">
+          <tr><th>Mention</th><th>Sur le bon</th></tr>
+          <tr><td class="val">Identification du fournisseur</td><td>Centre Primeurs, RCS, n° TVA, adresse</td></tr>
+          <tr><td class="val">Numéro du BL</td><td>6589</td></tr>
+          <tr><td class="val">Date de livraison</td><td>11/02/2024</td></tr>
+          <tr><td class="val">Identification du client</td><td>Au pain doré, adresse</td></tr>
+          <tr><td class="val">Caractéristiques des produits livrés</td><td>Réf., désignation, unité, quantité, prix unitaire HT</td></tr>
+          <tr><td class="val">Signature du client</td><td>Case « signature » (à compléter)</td></tr>
+        </table>
+        </div>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">La signature du client. C'est Léa, pour Au pain doré, qui signe après avoir contrôlé la livraison.</p>
+        <p class="conclu">Remarque : une entreprise installée à Rungis (94150) est inscrite au RCS de Créteil, pas de Paris. Erreur du document du manuel, sans effet sur les réponses.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 14 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 14</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Comparer et écrire les réserves</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Avant de signer, Léa compare le bon de commande n° 2024/10 (exercice 10) et le bon de livraison n° 6589 (exercice 13). (Exercices 10 et 11 du manuel.)
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Compare les deux bons, ligne par ligne. Que constates-tu ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Rédige les réserves que Léa doit écrire sur le bon de livraison.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Complète la date et la signature.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Pourquoi est-il important de contrôler avant de signer ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> regarde la colonne « quantité » de chaque bon. Une réserve dit précisément ce qui ne va pas : produit, référence, quantité.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span> Corrigé du manuel :
+        <div class="table-wrap">
+        <table class="tableau-corr">
+          <tr><th>Réf.</th><th>Commandé</th><th>Livré</th><th>Écart</th></tr>
+          <tr><td>CITJAU01</td><td>3 kg</td><td>3 kg</td><td>aucun</td></tr>
+          <tr><td>ORAJUS0</td><td>5 kg</td><td>5 kg</td><td>aucun</td></tr>
+          <tr><td>POMGOL2</td><td>2 cartons</td><td>1 carton</td><td class="val">– 1 carton</td></tr>
+        </table>
+        </div>
+        <p class="res">Il manque un carton de 5 kg de pommes golden.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Réserves : manque 1 carton de 5 kg de pommes golden (POMGOL2).</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Date : 11/02/2024 · signature : Au pain doré</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p class="res">Le bon de livraison signé déclenche la facturation. Si Léa signe sans réserve, la boulangerie risque de payer 2 cartons au lieu d'un.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 15 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 15</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">La livraison de farine du 4 novembre</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Mercredi 4 novembre 2026, 6 h. Le livreur des Moulins de la Plaine dépose la commande de l'exercice 7, plus 10 pains de levure fraîche de 500 g commandés en même temps. Karim est au four : Léa réceptionne seule. Elle constate :<br><br>
+      • 8 sacs de farine T65 livrés, dont <strong>1 sac déchiré</strong>, la farine s'est répandue ;<br>
+      • 2 sacs de farine de seigle T130 livrés, en bon état ;<br>
+      • <strong>8 pains de levure</strong> livrés au lieu de 10.<br><br>
+      Le bon de livraison n° 1182 indique 8 sacs T65, 2 sacs T130 et 10 pains de levure. (Transposition des exercices 10 et 11 du manuel.)
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Quels sont les trois points à vérifier à la réception ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Relève les deux anomalies. Pour chacune, dis s'il s'agit d'un problème de qualité ou de quantité.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Rédige les réserves sur le bon de livraison.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Après le départ du livreur, à qui Léa doit-elle rendre compte ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> le bon de livraison dit « 10 », mais Léa compte 8. On écrit ce qu'on a vraiment reçu, pas ce qui est imprimé.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Le bon état des cartons et emballages · la qualité des produits · la quantité des produits</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <div class="table-wrap">
+        <table class="tableau-corr">
+          <tr><th>Anomalie</th><th>Type</th></tr>
+          <tr><td>1 sac de farine T65 déchiré</td><td class="val">Qualité (état de l'emballage)</td></tr>
+          <tr><td>8 pains de levure au lieu de 10</td><td class="val">Quantité</td></tr>
+        </table>
+        </div>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Réserves : 1 sac de 25 kg de farine de tradition T65 déchiré, farine répandue · manque 2 pains de levure fraîche de 500 g (8 reçus sur 10).<br>Date : 04/11/2026 · signature : Léa, pour Au pain doré</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p class="res">À Karim, son responsable : elle lui signale les non-conformités et lui remet le bon de livraison avec les réserves.</p>
+        <p class="conclu">Contrôler, écrire des réserves précises, rendre compte : ce sont les gestes attendus à la réception.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 5 – SUJETS TYPE EXAMEN (séance 5)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="examen" style="margin-top:40px">
+  <span class="icone">🎓</span>
+  <h2><small>Séance 5 · 1 h</small>Bloc 5 – Sujets type examen EP1</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>EP1 – partie gestion appliquée : environ 30 minutes, notée sur 20.</code>
+  <code>Méthode : je lis la situation · je souligne les mots importants · je cherche l'information dans les documents · je réponds par une phrase complète, avec le vocabulaire du cours.</code>
+  <code>Vocabulaire à maîtriser : commande · client · fournisseur · bon de commande · bon de livraison · bon de réception · franco de port · réserves · HT.</code>
+  <p class="note">Les sujets 16 et 17 sont courts (10 minutes chacun). Le sujet 18 est un sujet complet de 30 minutes.</p>
+</div>
+
+<!-- EX 16 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 16</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Sujet court A : le circuit des documents</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Sophie forme un nouveau salarié. Elle lui explique ce qui se passe entre le moment où Au pain doré commande et le moment où la marchandise est rangée.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Remets dans l'ordre : réception et contrôle · envoi du bon de commande · signature du bon de livraison · rangement des produits · livraison par le fournisseur. (2 pts)</p></div>
+      <div class="question"><span class="q-num">2</span><p>Qui établit le bon de commande ? Qui établit le bon de livraison ? (2 pts)</p></div>
+      <div class="question"><span class="q-num">3</span><p>Comment s'appelle l'exemplaire du bon de livraison gardé par le client ? (1 pt)</p></div>
+      <div class="question"><span class="q-num">4</span><p>Quel document le client compare-t-il au bon de livraison ? (1 pt)</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> la commande part du client, la livraison part du fournisseur.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Envoi du bon de commande → livraison par le fournisseur → réception et contrôle → signature du bon de livraison → rangement des produits</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Bon de commande : le client · bon de livraison : le fournisseur</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Le bon de réception.</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <code>Le double du bon de commande.</code>
+        <p class="conclu">Barème : 6 points.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 17 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 17</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Sujet court B : le coût de la commande n° 2024/10</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Karim veut savoir combien va lui coûter la commande n° 2024/10 passée à Centre Primeurs (exercice 10). Il applique les conditions du bon : remise de 5 % sur l'ensemble de la commande, puis frais de transport de 25 €, sauf si la commande dépasse 300 €. (Prolongement des exercices 4 à 8 du manuel.)
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calcule le montant HT de chaque ligne, puis le total. (2 pts)</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calcule la remise de 5 %, puis le montant après remise. (2 pts)</p></div>
+      <div class="question"><span class="q-num">3</span><p>La livraison est-elle gratuite ? Calcule le montant HT à payer. (1 pt)</p></div>
+      <div class="question"><span class="q-num">4</span><p>Propose une solution à Karim pour ne plus payer le transport. (1 pt)</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> montant d'une ligne = quantité × prix unitaire HT. Remise = total × 5 ÷ 100.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Citrons : 3 × 2,65 = 7,95 € · oranges : 5 × 2,20 = 11,00 € · pommes : 2 × 8,50 = 17,00 €</code>
+        <code>Total brut HT = 7,95 + 11,00 + 17,00 = 35,95 €</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Remise = 35,95 × 5 ÷ 100 = 1,7975 ≈ 1,80 €</code>
+        <code>Montant après remise = 35,95 – 1,80 = 34,15 € HT</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Non : 34,15 € est inférieur à 300 €. Montant à payer = 34,15 + 25,00 = 59,15 € HT.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <code>Regrouper ses achats en une commande de plus de 300 € pour bénéficier du franco de port.</code>
+        <p class="conclu">Ce calcul n'est pas dans le manuel. Le bon ne précise pas si les 25 € sont HT, ni si le seuil de 300 € s'applique avant ou après remise : la correction choisit HT et après remise. La TVA n'est pas traitée ici. Barème : 6 points.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 18 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 18</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Sujet complet (30 min, /20) : la réception du 18 novembre</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Situation.</strong> Tu es apprenti(e) à la boulangerie-pâtisserie <strong>Au pain doré</strong>, dirigée par Karim. Lundi 16 novembre 2026, Karim a téléphoné aux Moulins de la Plaine pour commander de la farine et du sel. Il a ensuite envoyé le bon de commande n° 2026/52. Mercredi 18 novembre, à 6 h, le livreur arrive. Karim est au four : tu réceptionnes la livraison. (Prix fictifs.)<br><br>
+      <strong>Document A – bon de commande n° 2026/52 du 16/11/2026</strong> (client : Au pain doré · fournisseur : Moulins de la Plaine · livraison sous 48 h · franco de port pour toute commande supérieure à 250 € HT · paiement à 30 jours · signé par Karim)
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Réf.</th><th>Désignation</th><th>Unité</th><th>Qté</th><th>PU HT</th></tr>
+        <tr><td>FTRAD65</td><td>Farine de tradition française T65</td><td>sac de 25 kg</td><td class="num">10</td><td class="num">21,00 €</td></tr>
+        <tr><td>FSEIG130</td><td>Farine de seigle T130</td><td>sac de 25 kg</td><td class="num">2</td><td class="num">24,00 €</td></tr>
+        <tr><td>SELFIN25</td><td>Sel fin</td><td>sac de 25 kg</td><td class="num">1</td><td class="num">9,00 €</td></tr>
+      </table>
+    </div>
+    <div class="contexte">
+      <strong>Document B – bon de livraison n° 1240 du 18/11/2026</strong> (fournisseur : Moulins de la Plaine · client : Au pain doré)
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Réf.</th><th>Désignation</th><th>Unité</th><th>Qté</th><th>PU HT</th></tr>
+        <tr><td>FTRAD65</td><td>Farine de tradition française T65</td><td>sac de 25 kg</td><td class="num">10</td><td class="num">21,00 €</td></tr>
+        <tr><td>FBLE80</td><td>Farine de blé T80</td><td>sac de 25 kg</td><td class="num">2</td><td class="num">23,00 €</td></tr>
+        <tr><td>SELFIN25</td><td>Sel fin</td><td>sac de 25 kg</td><td class="num">1</td><td class="num">9,00 €</td></tr>
+      </table>
+    </div>
+    <div class="contexte">
+      <strong>Ce que tu constates en déchargeant :</strong> les 10 sacs de farine T65 sont en bon état · 2 sacs de farine T80 ont été livrés · le sac de sel est mouillé et percé.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Définis la commande. Qui est le client ? Qui est le fournisseur ? (3 pts)</p></div>
+      <div class="question"><span class="q-num">2</span><p>Karim a d'abord téléphoné. Pourquoi a-t-il aussi envoyé un bon de commande ? (2 pts)</p></div>
+      <div class="question"><span class="q-num">3</span><p>Relève dans le document A trois mentions obligatoires du bon de commande. (3 pts)</p></div>
+      <div class="question"><span class="q-num">4</span><p>Calcule le montant HT de la commande. La livraison est-elle gratuite ? (3 pts)</p></div>
+      <div class="question"><span class="q-num">5</span><p>Compare les documents A et B et tes constats. Relève les anomalies et indique leur type (référence, quantité ou qualité). (4 pts)</p></div>
+      <div class="question"><span class="q-num">6</span><p>Rédige les réserves sur le bon de livraison. (3 pts)</p></div>
+      <div class="question"><span class="q-num">7</span><p>Explique pourquoi tu dois rendre compte à Karim avant qu'il reçoive la facture. (2 pts)</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> compare les références ligne par ligne : FSEIG130 et FBLE80, est-ce le même produit ? Pour le sel, la quantité est juste, mais l'état ?</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <p class="res">La commande est un contrat de vente conclu entre un client et un fournisseur.</p>
+        <code>Client : Au pain doré · fournisseur : Moulins de la Plaine</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p class="res">La commande par téléphone ne laisse aucune preuve. Le bon de commande est une preuve écrite de la date et du contenu de la commande en cas de litige.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span> Trois réponses parmi :
+        <code>N° 2026/52 · date 16/11/2026 · client Au pain doré · fournisseur Moulins de la Plaine · conditions de vente (livraison sous 48 h, franco au-delà de 250 € HT, paiement à 30 jours) · caractéristiques des produits · signature de Karim</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <code>10 × 21,00 = 210,00 € · 2 × 24,00 = 48,00 € · 1 × 9,00 = 9,00 €</code>
+        <code>Total = 210,00 + 48,00 + 9,00 = 267,00 € HT</code>
+        <p class="res">267,00 € est supérieur à 250 € : la livraison est gratuite (franco de port).</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">5</span>
+        <div class="table-wrap">
+        <table class="tableau-corr">
+          <tr><th>Produit</th><th>Anomalie</th><th>Type</th></tr>
+          <tr><td>Farine de seigle T130</td><td>2 sacs de farine de blé T80 livrés à la place (et prix unitaire différent : 23,00 € au lieu de 24,00 €)</td><td class="val">Référence (mauvais produit)</td></tr>
+          <tr><td>Sel fin</td><td>Sac mouillé et percé</td><td class="val">Qualité (état de l'emballage)</td></tr>
+          <tr><td>Farine T65</td><td>Aucune : 10 sacs en bon état</td><td>–</td></tr>
+        </table>
+        </div>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">6</span>
+        <code>Réserves : 2 sacs de farine de blé T80 (FBLE80) livrés au lieu de 2 sacs de farine de seigle T130 (FSEIG130) commandés · 1 sac de sel fin de 25 kg (SELFIN25) mouillé et percé.<br>Date : 18/11/2026 · signature : prénom et nom, pour Au pain doré</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">7</span>
+        <p class="res">Le bon de livraison signé déclenche la facturation. Karim doit connaître les anomalies pour contacter le fournisseur et ne pas payer des produits non conformes.</p>
+        <p class="conclu">Barème : 3 + 2 + 3 + 3 + 4 + 3 + 2 = 20 points. Ce sujet porte sur le chapitre 9 (le contrat et l'approvisionnement). À l'examen, la partie gestion appliquée interroge au moins 3 des 5 domaines de S5.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+</main>
+
+<footer class="site-footer">
+  CAP boulanger – Gestion appliquée &nbsp;|&nbsp; Chapitre 9 : de la commande à la livraison &nbsp;|&nbsp; 18 exercices progressifs
+</footer>
+
+<script>
+function toggleCorr(btn) {
+  const corr = btn.nextElementSibling;
+  const isVisible = corr.classList.contains('visible');
+  corr.classList.toggle('visible', !isVisible);
+  btn.textContent = isVisible ? '✅ Voir la correction' : '🔒 Masquer la correction';
+}
+</script>
+</body>
+</html>
